@@ -1,0 +1,68 @@
+%! Author = Romain
+%! Date = 5/01/22
+
+% Preamble
+\documentclass[a4paper,11pt]{article}
+\usepackage[english]{babel}
+\title{Introduction à la cryptographie : Implémentation algo de chiffrement d'El Gamal}
+\author{Romain Duc, Alexandre Serratore}
+\date{6 mars 2022}
+
+% Packages
+% Symboles
+\usepackage{amsmath}
+
+% Graphes
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{positioning}
+
+% Mise en page
+\usepackage{multicol}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\lstset{
+language=Java,
+basicstyle=\ttfamily\small, %
+identifierstyle=\color{black}, %
+keywordstyle=\color{teal}, %
+numberstyle=\color{green},
+stringstyle=\color{black!64}, %
+commentstyle=\it\color{gray}, %
+columns=flexible, %
+tabsize=2, %
+extendedchars=true, %
+showspaces=false, %
+showstringspaces=false, %
+numbers=left, %
+numberstyle=\tiny, %
+breaklines=true, %
+breakautoindent=true, %
+captionpos=b,
+backgroundcolor=\color{lightgray!5},
+captionpos = b 
+}
+
+% Document
+\begin{document}
+
+	\maketitle
+        \label{subsec:Q1}
+        \textbf{Question 1 : \\}Quel langage de programmation avez-vous choisi ? Quelle bibliothèque permettant de gérer des nombres entiers de grande taille allez-vous utiliser ? Quelles sont les opérations implémentées dans cette bibliothèque (multiplication, addition,...) ?\\
+		\textit{\\Réponse :} \\\\Nous avons choisi d'utiliser Java. Le langage Java nous a paru l'option la plus adaptée, car il dispose de bibliothèques mathématiques intégrées permettant d'effectuer des opérations complexes, e.g. l'exponentiation modulaire.\\La classe\textit{ java.math.BigInteger } permet de gérer des nombres entiers de grande taille. \\Il est possible d'utiliser cette classe pour effectuer des soustractions, des modulos, des multiplications sur les entiers. La classe BigInteger permet de représenter des entiers sans les limitations de taille des types primitifs entiers, ou des enveloppes des types primitifs. La classe BigInteger offre en plus des opérations habituelles sur les entiers, des opérations de calcul en arithmétique modulaire, calcul du pgcd, génération de nombre premier, test pour savoir si un entier est premier, etc...  \\\\
+
+        \label{subsec:Q2}
+        \textbf{Question 2 : \\}De plus, pour générer les valeurs (très grandes elles aussi), x et r, il faut être capable de générer des nombres aléatoires de très bonne qualité et dits cryptographiquement sûrs.\\En vous aidant d’internet, donnez la définition d’un nombre aléatoire cryptographiquement sûr. Selon le langage de programmation choisi, donnez le nom de la bibliothèque qui va vous permettre de générer ces nombres aléatoires.\\ \textit{\\Réponse :}\\\\Un nombre aléatoire cryptographiquement sûr est un nombre généré aléatoi-\\rement qui est difficile à prédire ou à reproduire, même en utilisant des informations sur la façon dont il a été généré. Ces nombres sont souvent utilisés pour sécuriser les communications cryptographiques en générant des clés de chiffrement ou en ajoutant du bruit à des communications pour empêcher qu'elles ne soient déchiffrées.\\
+En Java, nous pouvons utiliser la bibliothèque "SecureRandom" pour générer des nombres aléatoires cryptographiquement sûrs. Voici comment on peut utiliser cette bibliothèque pour générer un nombre aléatoire cryptographiquement sûr :\\\\ \begin{lstlisting}
+import java.security.SecureRandom;
+
+SecureRandom random = new SecureRandom();
+int randomInt = random.nextInt();
+
+\end{lstlisting}
+\begin{itemize}
+    \item \url{https://miashs-www.u-ga.fr/prevert/Prog/Java/CoursJava/lesBig.html}
+    \item \url{https://stackoverflow.com/questions/11051205/difference-between-java-util-random-and-java-security-securerandom}
+\end{itemize}
+\end{document}
