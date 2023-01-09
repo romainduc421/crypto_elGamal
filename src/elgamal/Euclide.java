@@ -83,7 +83,7 @@ public class Euclide {
                 if(k < 10){
                     System.out.println("a = "+ a);
                     System.out.println("a.u + p.v = " + (a.multiply(results[1])).add(p.multiply(results[2])) );
-                    //verifie que pgcd(a,p) == resuls[0]
+                    //verifie que pgcd(a,p) == results[0]
                     System.out.println("results[0] == pgcd(a,p) = "+results[0].equals(a.gcd(p).abs()));
                     // Vérifie que a * u + b * v = GCD(a, p)
                     System.out.println("au + pv == pgcd(a,p) = "+(a.gcd(p).abs()).equals((a.multiply(results[1])).add(p.multiply(results[2])))+"\n");
