@@ -35,26 +35,56 @@ public class Euclide {
      * @return tableau de BigInteger contenant pgcd(a,b) et u,v aux indices respectifs 0, 1 et 2.
      */
     public static BigInteger[] euclideEtendu(BigInteger a, BigInteger b) {
-        BigInteger[] resultat = new BigInteger[3];
-        if (b.equals(BigInteger.ZERO)) {
-            resultat[0] = a;
-            resultat[1] = BigInteger.ONE;
-            resultat[2] = BigInteger.ZERO;
-            return resultat;
+        if (b.equals(BigInteger.ZERO)) {    //b, le reste, est nul
+            //gcd vauta, u =1 et v = 0
+            return new BigInteger[]{a, BigInteger.ONE, BigInteger.ZERO};
         }
         BigInteger[] suiteResultats = euclideEtendu(b, a.remainder(b));
 
-        BigInteger q = a.divide(b);
-        BigInteger gcd = suiteResultats[0];
-        BigInteger u = suiteResultats[2];
+        BigInteger q = a.divide(b);         // a / b
+        BigInteger gcd = suiteResultats[0]; // gcd = gcd(b, a%b);
+        BigInteger u = suiteResultats[2];   // u = v1
 
         BigInteger v = suiteResultats[1].subtract( q.multiply( suiteResultats[2]) );
-        resultat[0] = gcd;
-        resultat[1] = u;
-        resultat[2] = v;
+        // v = u1 - v1 * (a / b)
 
-        return resultat;
+        return new BigInteger[]{gcd, u,v};
     }
+
+    /**
+     * Version iterative de l'algorithme étendu d'Euclide (eviter recursion, run faster)
+     * @param a
+     * @param b
+     * @return {a,u,v} avec a = gcd(a,b) et coefficients u et v tq au + bv = pgcd(a,b)
+     */
+    public static BigInteger[] euclideEtendu2(BigInteger a, BigInteger b)
+    {
+        final BigInteger UN = BigInteger.ONE, ZERO = BigInteger.ZERO;
+        BigInteger u = UN,
+                v = ZERO,
+                u1 = ZERO,
+                v1 = UN,
+                t;
+
+        // tant que BigInteger.valueOf(b) > 0
+        while(b.compareTo(ZERO) > 0){
+            //q = a / b;
+            BigInteger q = a.divide(b);
+            t = u;
+            u = u1;
+            //u = u0 - q * u1
+            u1 = t.subtract(q.multiply(u1));
+            t = v;
+            v = v1;
+            //v = v0 - q * v1
+            v1 = t.subtract(q.multiply(v1));
+            t = b;
+            b = a.subtract(q.multiply(b));
+            a = t;
+        }
+        return (a.intValue()>0)? new BigInteger[]{a,u,v} : new BigInteger[]{a.negate(),u.negate(),v.negate()};
+    }
+
 
     /**
      * Réalise les 10 000 tests de la fonction euclide() avec le nombre p
@@ -76,7 +106,7 @@ public class Euclide {
             while(k < 10000) {
                 a = new BigInteger(1024, random);
                 bufferedWriter.write("a = "+ a + "\t et ");
-                BigInteger[] results = euclideEtendu(a, p);
+                BigInteger[] results = euclideEtendu2(a, p);
                 bufferedWriter.write("a.u + p.v = " + (a.multiply(results[1])).add(p.multiply(results[2])) + "\n");
 
                 //sortie standard que pour les 10 premieres iterations
