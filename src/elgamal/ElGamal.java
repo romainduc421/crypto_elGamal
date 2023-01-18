@@ -99,4 +99,41 @@ public class ElGamal {
             e.printStackTrace();
         }
     }
+
+
+    /**
+     * homomorphism propriety of ElGamal cypher
+     * @param p
+     * @param g
+     * @throws NoSuchProviderException
+     * @throws NoSuchAlgorithmException
+     */
+    public void homomorphism(BigInteger p, BigInteger g) throws NoSuchProviderException, NoSuchAlgorithmException {
+        SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        BigInteger message1 = BigInteger.valueOf(Math.abs(random.nextInt())),
+                message2 = BigInteger.valueOf(Math.abs(random.nextInt()));
+        BigInteger[] chiffre1, chiffre2;
+        //Création des clés
+        BigInteger[] keys = keyGen(p,g);
+        try {
+            System.out.println("m1 = " + message1);
+            bufferedWriter.write("m1 = " + message1);
+            System.out.println("m2 = " + message2);
+            bufferedWriter.write("m2 = " + message1);
+            chiffre1 = encrypt(p, g, keys[1], message1); //p,g,public key, msg1
+            chiffre2 = encrypt(p, g, keys[1], message2); //p,g, public key, msg2
+
+            BigInteger messageTotal = decrypt((chiffre1[0].multiply(chiffre2[0])).mod(p), (chiffre1[1].multiply(chiffre2[1])).mod(p), keys[0], p); //C, B, private-key, p
+            System.out.println("C and B decrypting gives : " + messageTotal);
+            bufferedWriter.write("C and B decrypting gives : " + messageTotal+"\n");
+            System.out.println("(m1 x m2).mod(p) = " + (message1.multiply(message2)).mod(p));
+            bufferedWriter.write("(m1 x m2).mod(p) = " + (message1.multiply(message2)).mod(p)+"\n\n");
+            System.out.println("Homomorphism checked\n");
+            bufferedWriter.write("Homorphism checked");
+            System.out.println("L'ensemble des tests se trouvent dans le fichier test.txt \n");
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
 }
