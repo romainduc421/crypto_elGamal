@@ -18,6 +18,7 @@ public class Main {
 
         //convert an hexadecimal string into a BigInteger
         BigInteger p = new BigInteger(hexa, 16), g = BigInteger.TWO;
+        final long startTime = System.nanoTime();
         try{
             File file = new File("test.txt");
 
@@ -30,6 +31,9 @@ public class Main {
             exponentiationModulaire.test10000Times(p,g);
             elGamal.test100Times(p,g);
             bufferedWriter.close();
+            long elapsedTime = System.nanoTime() - startTime;
+            System.out.println("Total execution time (s): "
+                    + elapsedTime/1000000000);
         }catch(IOException | NoSuchAlgorithmException | NoSuchProviderException | EuclideException e){
             e.printStackTrace();
         }
