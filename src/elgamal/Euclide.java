@@ -105,12 +105,16 @@ public class Euclide {
             int k=0;
             while(k < 10000) {
                 a = new BigInteger(1024, random);
-                bufferedWriter.write("a = "+ a + "\t et ");
                 BigInteger[] results = euclideEtendu2(a, p);
-                bufferedWriter.write("a.u + p.v = " + (a.multiply(results[1])).add(p.multiply(results[2])) + "\n");
 
-                //sortie standard que pour les 10 premieres iterations
-                if(k < 10){
+                //sortie que pour les 5 dernieres occurrences
+                if(k > 9994){
+                    bufferedWriter.write("a = "+ a + "\t et ");
+                    bufferedWriter.write("a.u + p.v = " + (a.multiply(results[1])).add(p.multiply(results[2])) + "\n");
+                    //verifie que pgcd(a,p) == results[0]
+                    bufferedWriter.write("results[0] == pgcd(a,p) = "+results[0].equals(a.gcd(p).abs()));
+                    // Vérifie que a * u + b * v = GCD(a, p)
+                    bufferedWriter.write("au + pv == pgcd(a,p) = "+(a.gcd(p).abs()).equals((a.multiply(results[1])).add(p.multiply(results[2])))+"\n");
                     System.out.println("a = "+ a);
                     System.out.println("a.u + p.v = " + (a.multiply(results[1])).add(p.multiply(results[2])) );
                     //verifie que pgcd(a,p) == results[0]

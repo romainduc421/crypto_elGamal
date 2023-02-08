@@ -80,15 +80,14 @@ public class ElGamal {
                 BigInteger messageChiffreC = encrypt[0];
                 BigInteger messageChiffreB = encrypt[1];
 
-                bufferedWriter.write("Le message est : " + message.intValue() + "\n");
-                bufferedWriter.write("Le message chiffré est : C  : " + messageChiffreC.intValue() +  "   -   et B  : " + messageChiffreB.intValue() + "\n");
-                message = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
-                bufferedWriter.write("Le message déchiffré est : " + message.intValue() + "\n\n");
-
-                if(k < 5){
+                //5 dernieres occurrences
+                if(k >= 95){
+                    bufferedWriter.write("Le message est : " + message.intValue() + "\n");
+                    bufferedWriter.write("Le message chiffré est : C  : " + messageChiffreC.intValue() +  "   -   et B  : " + messageChiffreB.intValue() + "\n");
+                    message = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
+                    bufferedWriter.write("Le message déchiffré est : " + message.intValue() + "\n\n");
                     System.out.println("Le message est : " + message.intValue());
                     System.out.println("Le message chiffré est :  C  = " + messageChiffreC.intValue() +  "   -   et B  = " + messageChiffreB.intValue());
-                    message = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
                     System.out.println("Le message déchiffré est : " + message.intValue() + "\n");
                 }
                 k++;
