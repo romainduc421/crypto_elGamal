@@ -58,8 +58,8 @@ public class ElGamal {
      * @return
      */
     public BigInteger decrypt(BigInteger C, BigInteger B, BigInteger x, BigInteger p) throws ArithmeticException {
-        //or return (exponentiationModulaire.expMod(p,B,x).modInverse(p)).multiply(C).mod(p)
-        return (Euclide.euclideEtendu2(exponentiationModulaire.expMod(p,B,x),p)[1]).multiply(C).mod(p);
+
+        return (exponentiationModulaire.expMod(p,B,x).modInverse(p)).multiply(C).mod(p);
     }
 
     public void test100Times(BigInteger p, BigInteger g) throws NoSuchProviderException, NoSuchAlgorithmException{
