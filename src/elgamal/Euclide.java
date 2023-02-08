@@ -112,9 +112,9 @@ public class Euclide {
                     bufferedWriter.write("a = "+ a + "\t et ");
                     bufferedWriter.write("a.u + p.v = " + (a.multiply(results[1])).add(p.multiply(results[2])) + "\n");
                     //verifie que pgcd(a,p) == results[0]
-                    bufferedWriter.write("results[0] == pgcd(a,p) = "+results[0].equals(a.gcd(p).abs()));
+                    bufferedWriter.write("results[0] == pgcd(a,p) = "+results[0].equals(a.gcd(p).abs())+"\n");
                     // Vérifie que a * u + b * v = GCD(a, p)
-                    bufferedWriter.write("au + pv == pgcd(a,p) = "+(a.gcd(p).abs()).equals((a.multiply(results[1])).add(p.multiply(results[2])))+"\n");
+                    bufferedWriter.write("au + pv == pgcd(a,p) = "+(a.gcd(p).abs()).equals((a.multiply(results[1])).add(p.multiply(results[2])))+"\n\n");
                     System.out.println("a = "+ a);
                     System.out.println("a.u + p.v = " + (a.multiply(results[1])).add(p.multiply(results[2])) );
                     //verifie que pgcd(a,p) == results[0]

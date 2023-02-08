@@ -52,7 +52,7 @@ public class ExponentiationModulaire {
                 if(k>=9995){
                     bufferedWriter.write("a = "+a+"\t et ");
                     bufferedWriter.write("expMod(p,g,a) = "+expMod(p,g,a)+"\n");
-                    bufferedWriter.write("((a^g) mod p == expMod(p,g,a)) = "+expMod(p,g,a).equals(g.modPow(a,p))+"\n");
+                    bufferedWriter.write("((a^g) mod p == expMod(p,g,a)) = "+expMod(p,g,a).equals(g.modPow(a,p))+"\n\n");
                     System.out.println("a = "+a+"\t et ");
                     System.out.println("expMod(p,g,a) = "+expMod(p,g,a));
                     System.out.println("((a^g) mod p == expMod(p,g,a)) = "+expMod(p,g,a).equals(g.modPow(a,p))+"\n");
