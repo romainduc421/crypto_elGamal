@@ -50,7 +50,7 @@ public class ExponentiationModulaire {
 
                 //5 dernieres occurrences
                 if(k>=9995){
-                    bufferedWriter.write("a = "+a+"\t et ");
+                    bufferedWriter.write("a = "+a+"\t et \n");
                     bufferedWriter.write("expMod(p,g,a) = "+expMod(p,g,a)+"\n");
                     bufferedWriter.write("((a^g) mod p == expMod(p,g,a)) = "+expMod(p,g,a).equals(g.modPow(a,p))+"\n\n");
                     System.out.println("a = "+a+"\t et ");
