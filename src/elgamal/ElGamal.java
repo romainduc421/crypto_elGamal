@@ -85,12 +85,12 @@ public class ElGamal {
                     bufferedWriter.write("Le message est : " + message.intValue() + "\n");
                     bufferedWriter.write("Le message chiffré est : C  : " + messageChiffreC.intValue() +  "   -   et B  : " + messageChiffreB.intValue() + "\n");
                     message2 = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
-                    bufferedWriter.write("Le message déchiffré est : " + message2.intValue());
+                    bufferedWriter.write("Le message déchiffré est : " + message2.intValue()+"\n");
                     bufferedWriter.write("Message correctement déchiffré ?  " + (message.intValue() == message2.intValue()) + "\n\n");
                     System.out.println("Le message est : " + message.intValue());
                     System.out.println("Le message chiffré est :  C  = " + messageChiffreC.intValue() +  "   -   et B  = " + messageChiffreB.intValue());
                     System.out.println("Le message déchiffré est : " + message2.intValue());
-                    System.out.println("Message correctement déchiffré ?  " + (message.intValue() == message2.intValue()) + "\n\n");
+                    System.out.println("Message correctement déchiffré ?  " + (message.intValue() == message2.intValue()) + "\n");
                 }
                 k++;
             }
