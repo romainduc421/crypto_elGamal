@@ -51,6 +51,8 @@ public class Euclide {
         return new BigInteger[]{gcd, u,v};
     }
 
+
+
     /**
      * Version iterative de l'algorithme étendu d'Euclide (eviter recursion, run faster)
      * @param a
@@ -84,7 +86,6 @@ public class Euclide {
         }
         return (a.intValue()>0)? new BigInteger[]{a,u,v} : new BigInteger[]{a.negate(),u.negate(),v.negate()};
     }
-
 
     /**
      * Réalise les 10 000 tests de la fonction euclide() avec le nombre p

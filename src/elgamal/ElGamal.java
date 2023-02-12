@@ -63,7 +63,7 @@ public class ElGamal {
     }
 
     public void test100Times(BigInteger p, BigInteger g) throws NoSuchProviderException, NoSuchAlgorithmException{
-        BigInteger message;
+        BigInteger message, message2;
         SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
 
         System.out.println("Test du chiffrement ElGamal : \n");
@@ -84,11 +84,13 @@ public class ElGamal {
                 if(k >= 95){
                     bufferedWriter.write("Le message est : " + message.intValue() + "\n");
                     bufferedWriter.write("Le message chiffré est : C  : " + messageChiffreC.intValue() +  "   -   et B  : " + messageChiffreB.intValue() + "\n");
-                    message = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
-                    bufferedWriter.write("Le message déchiffré est : " + message.intValue() + "\n\n");
+                    message2 = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
+                    bufferedWriter.write("Le message déchiffré est : " + message2.intValue());
+                    bufferedWriter.write("Message correctement déchiffré ?  " + (message.intValue() == message2.intValue()) + "\n\n");
                     System.out.println("Le message est : " + message.intValue());
                     System.out.println("Le message chiffré est :  C  = " + messageChiffreC.intValue() +  "   -   et B  = " + messageChiffreB.intValue());
-                    System.out.println("Le message déchiffré est : " + message.intValue() + "\n");
+                    System.out.println("Le message déchiffré est : " + message2.intValue());
+                    System.out.println("Message correctement déchiffré ?  " + (message.intValue() == message2.intValue()) + "\n\n");
                 }
                 k++;
             }
