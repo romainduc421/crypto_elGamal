@@ -14,10 +14,11 @@ import java.security.NoSuchProviderException;
 public class Main {
     public static void main(String[] args) {
         //key length : 256 bits
-        String hexa = "FFFFFFFFFFFFFFFFC90FDAA22168C234C4C6628B80DC1CD129024E088A67CC74020BBEA63B139B22514A08798E3404DDEF9519B3CD3A431B302B0A6DF25F14374FE1356D6D51C245E485B576625E7EC6F44C42E9A637ED6B0BFF5CB6F406B7EDEE386BFB5A899FA5AE9F24117C4B1FE649286651ECE65FFFFFFFFFFFFFFFF";
+        String primeMod = "ffffffffffffffffc90fdaa22168c234c4c6628b80dc1cd129024e088a67cc74020bbea63b139b22514a08798e3404ddef9519b3cd3a431b302b0a6df25f14374fe1356d6d51c245e485B576625e7ec6f44c42e9a637ed6b0bff5cb6f406b7edee386bfb5a899fa5ae9f24117c4b1fe649286651ece65381ffffffffffffffff";
+        //String primeMod2 = "b59dd79568817b4b9f6789822d22594f376e6a9abc0241846de426e5dd8f6eddef00b465f38f509b2b18351064704fe75f012fa346c5e2c442d7c99eac79b2bc8a202c98327b96816cb8042698ed3734643c4c05164e739cb72fba24f6156b6f47a7300ef778c378ea301e1141a6b25d48f1924268c62ee8dd3134745cdf7323";
 
         //convert an hexadecimal string into a BigInteger
-        BigInteger p = new BigInteger(hexa, 16), g = BigInteger.TWO;
+        BigInteger p = new BigInteger(primeMod, 16), g = BigInteger.TWO;
         final long startTime = System.nanoTime();
         try{
             File file = new File("test.txt");
