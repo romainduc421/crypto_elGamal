@@ -6,7 +6,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
 
@@ -39,16 +38,11 @@ public class Euclide {
             //gcd vauta, u =1 et v = 0
             return new BigInteger[]{a, BigInteger.ONE, BigInteger.ZERO};
         }
-        BigInteger[] suiteResultats = euclideEtendu(b, a.remainder(b));
-
-        BigInteger q = a.divide(b);         // a / b
-        BigInteger gcd = suiteResultats[0]; // gcd = gcd(b, a%b);
-        BigInteger u = suiteResultats[2];   // u = v1
-
-        BigInteger v = suiteResultats[1].subtract( q.multiply( suiteResultats[2]) );
+        BigInteger[] suiteResultats = euclideEtendu(b, a.remainder(b)); // gcd(b, a%b)
+        BigInteger v = suiteResultats[1].subtract( (a.divide(b)).multiply( suiteResultats[2]) );
         // v = u1 - v1 * (a / b)
 
-        return new BigInteger[]{gcd, u,v};
+        return new BigInteger[]{suiteResultats[0],suiteResultats[2],v};
     }
 
 
@@ -87,18 +81,26 @@ public class Euclide {
         return (a.intValue()>0)? new BigInteger[]{a,u,v} : new BigInteger[]{a.negate(),u.negate(),v.negate()};
     }
 
+
+    public static BigInteger modInv(BigInteger a, BigInteger b) throws EuclideException {
+        BigInteger[] resEuclide = euclideEtendu2(a,b);
+        if(!resEuclide[0].equals(BigInteger.ONE)){
+            throw new EuclideException("No modular inverse possible");
+        }else{
+            return resEuclide[1].mod(b);
+        }
+    }
+
     /**
      * Réalise les 10 000 tests de la fonction euclide() avec le nombre p
      * et 10 000 valeurs différentes de a (générées aléatoirement avec SecureRandom).
      * @param p value of prime BigInteger p
      * @throws NoSuchAlgorithmException
-     * @throws NoSuchProviderException
      */
-    public void test10000Times(BigInteger p) throws NoSuchAlgorithmException, NoSuchProviderException, EuclideException {
+    public void test10000Times(BigInteger p) throws NoSuchAlgorithmException, EuclideException {
         BigInteger a;
 
-        //https://stackoverflow.com/questions/12726434/use-of-sha1prng-in-securerandom-class
-        SecureRandom random = SecureRandom.getInstance("SHA1PRNG","SUN");
+        SecureRandom random = SecureRandom.getInstanceStrong();
 
         System.out.println("Test de la fonction Euclide() : ");
         try {
@@ -110,18 +112,22 @@ public class Euclide {
 
                 //sortie que pour les 5 dernieres occurrences
                 if(k > 9994){
+                    BigInteger gcd_ap = a.gcd(p).abs();
+                    BigInteger bezout = a.multiply(results[1]).add(p.multiply(results[2]));
                     bufferedWriter.write("a = "+ a + "\t et \n");
-                    bufferedWriter.write("a.u + p.v = " + (a.multiply(results[1])).add(p.multiply(results[2])) + "\n");
+                    bufferedWriter.write("a.u + p.v = " + bezout + "\n");
                     //verifie que pgcd(a,p) == results[0]
-                    bufferedWriter.write("results[0] == pgcd(a,p) = "+results[0].equals(a.gcd(p).abs())+"\n");
+                    bufferedWriter.write("results[0] == pgcd(a,p) = "+results[0].equals(gcd_ap)+"\n");
                     // Vérifie que a * u + b * v = GCD(a, p)
-                    bufferedWriter.write("au + pv == pgcd(a,p) = "+(a.gcd(p).abs()).equals((a.multiply(results[1])).add(p.multiply(results[2])))+"\n\n");
+                    bufferedWriter.write("au + pv == pgcd(a,p) = "+gcd_ap.equals(bezout)+"\n");
+                    bufferedWriter.write("gcd == 1 = "+BigInteger.valueOf(1).equals(bezout)+"\n\n");
                     System.out.println("a = "+ a);
-                    System.out.println("a.u + p.v = " + (a.multiply(results[1])).add(p.multiply(results[2])) );
+                    System.out.println("a.u + p.v = " + bezout );
                     //verifie que pgcd(a,p) == results[0]
-                    System.out.println("results[0] == pgcd(a,p) = "+results[0].equals(a.gcd(p).abs()));
+                    System.out.println("results[0] == pgcd(a,p) = "+results[0].equals(gcd_ap));
                     // Vérifie que a * u + b * v = GCD(a, p)
-                    System.out.println("au + pv == pgcd(a,p) = "+(a.gcd(p).abs()).equals((a.multiply(results[1])).add(p.multiply(results[2])))+"\n");
+                    System.out.println("au + pv == pgcd(a,p) = "+gcd_ap.equals(bezout));
+                    System.out.println("gcd == 1 = "+BigInteger.valueOf(1).equals(bezout)+"\n");
                 }
                 k++;
             }

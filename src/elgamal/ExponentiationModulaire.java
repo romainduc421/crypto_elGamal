@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 
 public class ExponentiationModulaire {
@@ -37,9 +36,9 @@ public class ExponentiationModulaire {
         return x;
     }
 
-    public void test10000Times(BigInteger p, BigInteger g) throws NoSuchAlgorithmException, NoSuchProviderException {
+    public void test10000Times(BigInteger p, BigInteger g) throws NoSuchAlgorithmException {
         BigInteger a;
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG", "SUN");
+        SecureRandom sr = SecureRandom.getInstanceStrong();
         System.out.println("Test de la fonction expMod() : ");
 
         try{
@@ -50,12 +49,13 @@ public class ExponentiationModulaire {
 
                 //5 dernieres occurrences
                 if(k>=9995){
+                    BigInteger ourExpMod = expMod(p,g,a), modPowofBigint = g.modPow(a,p) ;
                     bufferedWriter.write("a = "+a+"\t et \n");
-                    bufferedWriter.write("expMod(p,g,a) = "+expMod(p,g,a)+"\n");
-                    bufferedWriter.write("((a^g) mod p == expMod(p,g,a)) = "+expMod(p,g,a).equals(g.modPow(a,p))+"\n\n");
+                    bufferedWriter.write("expMod(p,g,a) = "+ourExpMod+"\n");
+                    bufferedWriter.write("((a^g) mod p == expMod(p,g,a)) = "+ourExpMod.equals(modPowofBigint)+"\n\n");
                     System.out.println("a = "+a+"\t et ");
-                    System.out.println("expMod(p,g,a) = "+expMod(p,g,a));
-                    System.out.println("((a^g) mod p == expMod(p,g,a)) = "+expMod(p,g,a).equals(g.modPow(a,p))+"\n");
+                    System.out.println("expMod(p,g,a) = "+ourExpMod);
+                    System.out.println("((a^g) mod p == expMod(p,g,a)) = "+ourExpMod.equals(modPowofBigint)+"\n");
                 }
 
                 k++;

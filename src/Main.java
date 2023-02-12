@@ -9,7 +9,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 
 public class Main {
     public static void main(String[] args) {
@@ -31,11 +30,12 @@ public class Main {
             euclide.test10000Times(p);
             exponentiationModulaire.test10000Times(p,g);
             elGamal.test100Times(p,g);
+            elGamal.homomorphic_property(p,g);
             bufferedWriter.close();
             long elapsedTime = System.nanoTime() - startTime;
             System.out.println("Total execution time (s): "
                     + elapsedTime/1000000000);
-        }catch(IOException | NoSuchAlgorithmException | NoSuchProviderException | EuclideException e){
+        }catch(IOException | NoSuchAlgorithmException | EuclideException e){
             e.printStackTrace();
         }
     }
