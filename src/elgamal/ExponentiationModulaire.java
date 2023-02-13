@@ -46,10 +46,11 @@ public class ExponentiationModulaire {
             int k = 0;
             while(k<10000){
                 a = new BigInteger(500,sr);
+                BigInteger ourExpMod = expMod(p,g,a), modPowofBigint = g.modPow(a,p) ;
+                assert(ourExpMod.equals(modPowofBigint)):"((a^g) mod p != expMod(p,g,a))";
 
-                //5 dernieres occurrences
-                if(k>=9995){
-                    BigInteger ourExpMod = expMod(p,g,a), modPowofBigint = g.modPow(a,p) ;
+                //5 premieres occurrences
+                if(k<5){
                     bufferedWriter.write("a = "+a+"\t et \n");
                     bufferedWriter.write("expMod(p,g,a) = "+ourExpMod+"\n");
                     bufferedWriter.write("((a^g) mod p == expMod(p,g,a)) = "+ourExpMod.equals(modPowofBigint)+"\n\n");

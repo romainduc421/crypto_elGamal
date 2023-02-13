@@ -62,7 +62,7 @@ public class ElGamal {
     }
 
     public void test100Times(BigInteger p, BigInteger g) throws NoSuchAlgorithmException{
-        BigInteger message, message2;
+
         //returns an instance of the strongest SecureRandom implementation available on each platform
         SecureRandom random = SecureRandom.getInstanceStrong();
 
@@ -71,7 +71,7 @@ public class ElGamal {
             bufferedWriter.write("Test du chiffrement ElGamal  : \n");
             int k = 0;
             while(k<100){
-                message = BigInteger.valueOf(Math.abs(random.nextInt()));
+                BigInteger message = BigInteger.valueOf(Math.abs(random.nextInt()));
                 BigInteger[] keys = keyGen(p,g);
                 BigInteger bobPrivateKey = keys[0];
                 BigInteger bobPublicKey = keys[1];
@@ -79,12 +79,14 @@ public class ElGamal {
                 BigInteger[] encrypt = encrypt(p,g, bobPublicKey, message);
                 BigInteger messageChiffreC = encrypt[0];
                 BigInteger messageChiffreB = encrypt[1];
+                BigInteger message2 = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
+                assert(message.intValue() == message2.intValue()):"message déchiffré différent";
 
-                //5 dernieres occurrences
-                if(k >= 95){
+                //5 premieres occurrences
+                if(k < 5){
                     bufferedWriter.write("Le message est : " + message.intValue() + "\n");
                     bufferedWriter.write("Le message chiffré est : C  : " + messageChiffreC.intValue() +  "   -   et B  : " + messageChiffreB.intValue() + "\n");
-                    message2 = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
+
                     bufferedWriter.write("Le message déchiffré est : " + message2.intValue()+"\n");
                     bufferedWriter.write("Message correctement déchiffré ?  " + (message.intValue() == message2.intValue()) + "\n\n");
                     System.out.println("Le message est : " + message.intValue());
@@ -125,9 +127,11 @@ public class ElGamal {
                 BigInteger messageChiffreB = encrypt[1].multiply(encrypt2[1]).mod(p);
 
                 BigInteger decryptTotal = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
-                //5 dernieres occurrences
-                if(k >= 45){
-                    BigInteger productm1m2 = message.multiply(message2).mod(p);
+                BigInteger productm1m2 = message.multiply(message2).mod(p);
+
+                assert(productm1m2.equals(decryptTotal)):"property not checked";
+                //5 premieres occurrences
+                if(k < 5){
                     System.out.println("m1 = "+message+", \tm2 = "+message2);
                     System.out.println("C and B decrypting gives : " + decryptTotal);
                     System.out.println("(m1 * m2).mod(p) = " + productm1m2);

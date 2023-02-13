@@ -109,11 +109,15 @@ public class Euclide {
             while(k < 10000) {
                 a = new BigInteger(1024, random);
                 BigInteger[] results = euclideEtendu2(a, p);
+                BigInteger gcd_ap = a.gcd(p).abs();
+                BigInteger bezout = a.multiply(results[1]).add(p.multiply(results[2]));
+                assert(results[0].equals(gcd_ap)):"le premier element du tableau ne contient pas le gcd(a,p)";
+                assert(gcd_ap.equals(bezout)):"gcd(a,p) != au + pv";
+                assert(BigInteger.valueOf(1).equals(bezout)):"equation de bezout ne donne pas 1";
 
-                //sortie que pour les 5 dernieres occurrences
-                if(k > 9994){
-                    BigInteger gcd_ap = a.gcd(p).abs();
-                    BigInteger bezout = a.multiply(results[1]).add(p.multiply(results[2]));
+                //sortie que pour les 5 premieres occurrences
+                if(k < 5){
+
                     bufferedWriter.write("a = "+ a + "\t et \n");
                     bufferedWriter.write("a.u + p.v = " + bezout + "\n");
                     //verifie que pgcd(a,p) == results[0]

@@ -6,7 +6,7 @@
 ~~~
 git clone https://github.com/romainduc421/crypto_elGamal
 cd crypto_elGamal/src/
-javac Main.java; java Main
+javac Main.java; java -ea Main
 ~~~
 * Le fichier de sortie ```test.txt``` se trouvera sous le répertoire src
 
