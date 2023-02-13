@@ -17,7 +17,7 @@ public class Euclide {
     }
 
     public static BigInteger[] euclideCompute(BigInteger a, BigInteger b) throws EuclideException{
-        BigInteger[] suiteResultats = euclideEtendu(a,b);
+        BigInteger[] suiteResultats = euclideEtendu2(a,b);
         if(suiteResultats[0].equals(BigInteger.ONE))
         {
             return suiteResultats;
@@ -108,7 +108,7 @@ public class Euclide {
             int k=0;
             while(k < 10000) {
                 a = new BigInteger(1024, random);
-                BigInteger[] results = euclideEtendu2(a, p);
+                BigInteger[] results = euclideCompute(a, p);
                 BigInteger gcd_ap = a.gcd(p).abs();
                 BigInteger bezout = a.multiply(results[1]).add(p.multiply(results[2]));
                 assert(results[0].equals(gcd_ap)):"le premier element du tableau ne contient pas le gcd(a,p)";
