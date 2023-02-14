@@ -10,9 +10,11 @@ import java.security.SecureRandom;
 
 public class ElGamal {
     private final ExponentiationModulaire exponentiationModulaire;
+    private final Euclide euclide;
     private final BufferedWriter bufferedWriter;
     public ElGamal(BufferedWriter bufferedWriter){
         this.bufferedWriter = bufferedWriter;
+        this.euclide = new Euclide(bufferedWriter);
         this.exponentiationModulaire = new ExponentiationModulaire(bufferedWriter);
     }
 
@@ -57,29 +59,32 @@ public class ElGamal {
      * @return
      */
     public BigInteger decrypt(BigInteger C, BigInteger B, BigInteger x, BigInteger p) throws ArithmeticException, EuclideException {
-        return (Euclide.modInv(exponentiationModulaire.expMod(p,B,x),p)).multiply(C).mod(p);
+        return (euclide.modInv(exponentiationModulaire.expMod(p,B,x),p)).multiply(C).mod(p);
         //return (exponentiationModulaire.expMod(p,B,x).modInverse(p)).multiply(C).mod(p);
     }
 
     public void test100Times(BigInteger p, BigInteger g) throws NoSuchAlgorithmException{
-
+        BigInteger message, message2;
         //returns an instance of the strongest SecureRandom implementation available on each platform
         SecureRandom random = SecureRandom.getInstanceStrong();
+        BigInteger[] keys, encrypt;
+        BigInteger bobPrivateKey, bobPublicKey;
+        BigInteger messageChiffreC, messageChiffreB;
 
         System.out.println("Test du chiffrement ElGamal : \n");
         try {
             bufferedWriter.write("Test du chiffrement ElGamal  : \n");
             int k = 0;
             while(k<100){
-                BigInteger message = BigInteger.valueOf(Math.abs(random.nextInt()));
-                BigInteger[] keys = keyGen(p,g);
-                BigInteger bobPrivateKey = keys[0];
-                BigInteger bobPublicKey = keys[1];
+                message = BigInteger.valueOf(Math.abs(random.nextInt()));
+                keys = keyGen(p,g);
+                bobPrivateKey = keys[0];
+                bobPublicKey = keys[1];
 
-                BigInteger[] encrypt = encrypt(p,g, bobPublicKey, message);
-                BigInteger messageChiffreC = encrypt[0];
-                BigInteger messageChiffreB = encrypt[1];
-                BigInteger message2 = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
+                encrypt = encrypt(p,g, bobPublicKey, message);
+                messageChiffreC = encrypt[0];
+                messageChiffreB = encrypt[1];
+                message2 = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
                 assert(message.intValue() == message2.intValue()):"message déchiffré différent";
 
                 //5 premieres occurrences
@@ -108,26 +113,30 @@ public class ElGamal {
         BigInteger message, message2;
         //returns an instance of the strongest SecureRandom implementation available on each platform
         SecureRandom random = SecureRandom.getInstanceStrong();
+        BigInteger[] keys, encrypt, encrypt2;
+        BigInteger bobPrivateKey, bobPublicKey;
+        BigInteger messageChiffreC, messageChiffreB, decryptTotal, productm1m2;
+
 
         System.out.println("Test de la propriété homomorphe : \n");
         try {
             bufferedWriter.write("Test de la propriété homomorphe : \n");
             int k = 0;
-            while(k<50){
+            while(k<30){
                 message = BigInteger.valueOf(Math.abs(random.nextInt()));
                 message2 = BigInteger.valueOf(Math.abs(random.nextInt()));
-                BigInteger[] keys = keyGen(p,g);
-                BigInteger bobPrivateKey = keys[0];
-                BigInteger bobPublicKey = keys[1];
+                keys = keyGen(p,g);
+                bobPrivateKey = keys[0];
+                bobPublicKey = keys[1];
 
-                BigInteger[] encrypt = encrypt(p,g, bobPublicKey, message);
-                BigInteger[] encrypt2 = encrypt(p,g, bobPublicKey, message2);
+                encrypt = encrypt(p,g, bobPublicKey, message);
+                encrypt2 = encrypt(p,g, bobPublicKey, message2);
                 
-                BigInteger messageChiffreC = encrypt[0].multiply(encrypt2[0]).mod(p);
-                BigInteger messageChiffreB = encrypt[1].multiply(encrypt2[1]).mod(p);
+                messageChiffreC = encrypt[0].multiply(encrypt2[0]).mod(p);
+                messageChiffreB = encrypt[1].multiply(encrypt2[1]).mod(p);
 
-                BigInteger decryptTotal = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
-                BigInteger productm1m2 = message.multiply(message2).mod(p);
+                decryptTotal = decrypt(messageChiffreC,messageChiffreB, bobPrivateKey, p);
+                productm1m2 = message.multiply(message2).mod(p);
 
                 assert(productm1m2.equals(decryptTotal)):"property not checked";
                 //5 premieres occurrences

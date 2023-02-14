@@ -16,7 +16,7 @@ public class Euclide {
         this.bufferedWriter = b;
     }
 
-    public static BigInteger[] euclideCompute(BigInteger a, BigInteger b) throws EuclideException{
+    public BigInteger[] euclideCompute(BigInteger a, BigInteger b) throws EuclideException{
         BigInteger[] suiteResultats = euclideEtendu2(a,b);
         if(suiteResultats[0].equals(BigInteger.ONE))
         {
@@ -33,7 +33,7 @@ public class Euclide {
      * @param b deuxieme entier
      * @return tableau de BigInteger contenant pgcd(a,b) et u,v aux indices respectifs 0, 1 et 2.
      */
-    public static BigInteger[] euclideEtendu(BigInteger a, BigInteger b) {
+    public BigInteger[] euclideEtendu(BigInteger a, BigInteger b) {
         if (b.equals(BigInteger.ZERO)) {    //b, le reste, est nul
             //gcd vauta, u =1 et v = 0
             return new BigInteger[]{a, BigInteger.ONE, BigInteger.ZERO};
@@ -53,7 +53,7 @@ public class Euclide {
      * @param b
      * @return {a,u,v} avec a = gcd(a,b) et coefficients u et v tq au + bv = pgcd(a,b)
      */
-    public static BigInteger[] euclideEtendu2(BigInteger a, BigInteger b)
+    public BigInteger[] euclideEtendu2(BigInteger a, BigInteger b)
     {
         final BigInteger UN = BigInteger.ONE, ZERO = BigInteger.ZERO;
         BigInteger u = UN,
@@ -82,7 +82,7 @@ public class Euclide {
     }
 
 
-    public static BigInteger modInv(BigInteger a, BigInteger b) throws EuclideException {
+    public BigInteger modInv(BigInteger a, BigInteger b) throws EuclideException {
         BigInteger[] resEuclide = euclideEtendu2(a,b);
         if(!resEuclide[0].equals(BigInteger.ONE)){
             throw new EuclideException("No modular inverse possible");
@@ -98,7 +98,8 @@ public class Euclide {
      * @throws NoSuchAlgorithmException
      */
     public void test10000Times(BigInteger p) throws NoSuchAlgorithmException, EuclideException {
-        BigInteger a;
+        BigInteger a, gcd_ap, bezout;
+        BigInteger[] results;
 
         SecureRandom random = SecureRandom.getInstanceStrong();
 
@@ -108,9 +109,9 @@ public class Euclide {
             int k=0;
             while(k < 10000) {
                 a = new BigInteger(1024, random);
-                BigInteger[] results = euclideCompute(a, p);
-                BigInteger gcd_ap = a.gcd(p).abs();
-                BigInteger bezout = a.multiply(results[1]).add(p.multiply(results[2]));
+                results = euclideCompute(a, p);
+                gcd_ap = a.gcd(p).abs();
+                bezout = a.multiply(results[1]).add(p.multiply(results[2]));
                 assert(results[0].equals(gcd_ap)):"le premier element du tableau ne contient pas le gcd(a,p)";
                 assert(gcd_ap.equals(bezout)):"gcd(a,p) != au + pv";
                 assert(BigInteger.valueOf(1).equals(bezout)):"equation de bezout ne donne pas 1";

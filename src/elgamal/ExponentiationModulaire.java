@@ -37,7 +37,7 @@ public class ExponentiationModulaire {
     }
 
     public void test10000Times(BigInteger p, BigInteger g) throws NoSuchAlgorithmException {
-        BigInteger a;
+        BigInteger a, ourExpMod, modPowofBigint;
         SecureRandom sr = SecureRandom.getInstanceStrong();
         System.out.println("Test de la fonction expMod() : ");
 
@@ -46,7 +46,8 @@ public class ExponentiationModulaire {
             int k = 0;
             while(k<10000){
                 a = new BigInteger(500,sr);
-                BigInteger ourExpMod = expMod(p,g,a), modPowofBigint = g.modPow(a,p) ;
+                ourExpMod = expMod(p,g,a);
+                modPowofBigint = g.modPow(a,p) ;
                 assert(ourExpMod.equals(modPowofBigint)):"((a^g) mod p != expMod(p,g,a))";
 
                 //5 premieres occurrences
