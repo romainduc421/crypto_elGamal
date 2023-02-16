@@ -5,7 +5,6 @@ import elgamal.exceptions.EuclideException;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class ElGamal {
@@ -23,10 +22,8 @@ public class ElGamal {
      * @param p valeur du grand nombre premier
      * @param g valeur du grand nombre premier
      * @return BigInteger[2] contenant k_p et k_s
-     * @throws NoSuchAlgorithmException
      */
-    public BigInteger[] keyGen(BigInteger p, BigInteger g) throws NoSuchAlgorithmException {
-        SecureRandom rand = SecureRandom.getInstanceStrong();
+    public BigInteger[] keyGen(BigInteger p, BigInteger g, SecureRandom rand) {
         BigInteger x = new BigInteger(1024, rand); // tire x au hasard (private-key)
         BigInteger X = exponentiationModulaire.expMod(p,g,x); // calcule X = g^x mod p (public-key)
         return new BigInteger[] {x, X};
@@ -40,10 +37,8 @@ public class ElGamal {
      * @param publicKey
      * @param m
      * @return couple chiffre {C,B} avec C = m.y mod p et B = g^r mod p
-     * @throws NoSuchAlgorithmException
      */
-    public BigInteger[] encrypt(BigInteger p, BigInteger g, BigInteger publicKey, BigInteger m) throws NoSuchAlgorithmException{
-        SecureRandom rand = SecureRandom.getInstanceStrong();
+    public BigInteger[] encrypt(BigInteger p, BigInteger g, BigInteger publicKey, BigInteger m, SecureRandom rand){
         BigInteger r = new BigInteger(1024, rand);
         BigInteger B = exponentiationModulaire.expMod(p, g, r); // calcule B = g^r mod p
         BigInteger C = m.multiply(exponentiationModulaire.expMod(p, publicKey, r)).mod(p); // calcule C = m * X^r mod p
@@ -58,52 +53,48 @@ public class ElGamal {
      * @param p grand entier : modulo
      * @return
      */
-    public BigInteger decrypt(BigInteger C, BigInteger B, BigInteger x, BigInteger p) throws ArithmeticException, EuclideException {
+    public BigInteger decrypt(BigInteger C, BigInteger B, BigInteger x, BigInteger p) throws EuclideException {
         return (euclide.modInv(exponentiationModulaire.expMod(p,B,x),p)).multiply(C).mod(p);
-        //return (exponentiationModulaire.expMod(p,B,x).modInverse(p)).multiply(C).mod(p);
     }
 
-    public void test100Times(BigInteger p, BigInteger g) throws NoSuchAlgorithmException{
+    /**
+     * Test de la fonction de chiffrement et de dechiffrement
+     * @param p
+     * @param g
+     * @param random
+     * @throws EuclideException
+     */
+    public void test100Times(BigInteger p, BigInteger g, SecureRandom random) throws EuclideException {
         BigInteger message, message2;
-        //returns an instance of the strongest SecureRandom implementation available on each platform
-        SecureRandom random = SecureRandom.getInstanceStrong();
         BigInteger[] keys, encrypt;
-        BigInteger messageChiffreC, messageChiffreB;
+        StringBuilder sb1 = new StringBuilder();
 
-        System.out.println("Test du chiffrement ElGamal : \n");
-        try {
-            bufferedWriter.write("Test du chiffrement ElGamal  : \n");
-            int k = 0;
-            while(k<100){
-                message = BigInteger.valueOf(Math.abs(random.nextInt()));
-                keys = keyGen(p,g);
+        sb1.append("Test du chiffrement ElGamal  : \n\n");
 
-                encrypt = encrypt(p,g, keys[1], message);
-                messageChiffreC = encrypt[0];
-                messageChiffreB = encrypt[1];
-                message2 = decrypt(messageChiffreC,messageChiffreB, keys[0], p);
-                assert(message.intValue() == message2.intValue()):"message déchiffré différent";
+        for(int k=0; k<100; k++){
+            message = BigInteger.valueOf(Math.abs(random.nextInt()));
+            keys = keyGen(p,g, random);
 
-                //5 premieres occurrences
-                if(k < 5){
-                    bufferedWriter.write("Le message est : " + message.intValue() + "\n");
-                    bufferedWriter.write("Le message chiffré est : C  : " + messageChiffreC.intValue() +  "   -   et B  : " + messageChiffreB.intValue() + "\n");
+            encrypt = encrypt(p,g, keys[1], message, random);
+            message2 = decrypt(encrypt[0],encrypt[1], keys[0], p);
+            assert(message.intValue() == message2.intValue()):"message déchiffré différent";
 
-                    bufferedWriter.write("Le message déchiffré est : " + message2.intValue()+"\n");
-                    bufferedWriter.write("Message correctement déchiffré ?  " + (message.intValue() == message2.intValue()) + "\n\n");
-                    System.out.println("Le message est : " + message.intValue());
-                    System.out.println("Le message chiffré est :  C  = " + messageChiffreC.intValue() +  "   -   et B  = " + messageChiffreB.intValue());
-                    System.out.println("Le message déchiffré est : " + message2.intValue());
-                    System.out.println("Message correctement déchiffré ?  " + (message.intValue() == message2.intValue()) + "\n");
-                    System.out.flush();
-                }
-                k++;
+            //5 premieres occurrences
+            if(k < 5){
+                sb1.append("Le message est : ").append(message.intValue()).append("\n");
+                sb1.append("Le message chiffré est : C  : ").append(encrypt[0].intValue()).append("   -   et B  : ").append(encrypt[1].intValue()).append("\n");
+
+                sb1.append("Le message déchiffré est : ").append(message2.intValue()).append("\n");
+                sb1.append("Message correctement déchiffré ?  ").append(message.intValue() == message2.intValue()).append("\n\n");
             }
-            System.out.println("L'ensemble des tests se trouvent dans le fichier test.txt \n");
-
-        } catch (IOException | EuclideException e) {
+        }
+        try {
+            bufferedWriter.write(sb1.toString());
+        } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.print(sb1);
+        System.out.flush();
     }
 
 
@@ -112,51 +103,40 @@ public class ElGamal {
      * le produit de deux chiffrés donne le produit des deux clairs
      * @param p
      * @param g
-     * @throws NoSuchAlgorithmException
      * @throws EuclideException
      */
-    public void homomorphic_property(BigInteger p, BigInteger g) throws NoSuchAlgorithmException, EuclideException{
+    public void homomorphic_property(BigInteger p, BigInteger g, SecureRandom random) throws EuclideException{
         BigInteger message, message2;
-        //returns an instance of the strongest SecureRandom implementation available on each platform
-        SecureRandom random = SecureRandom.getInstanceStrong();
         BigInteger[] keys, encrypt, encrypt2;
         BigInteger decryptTotal, productm1m2;
+        StringBuilder sb1 = new StringBuilder();
 
+        sb1.append("Test de la propriété homomorphe : \n\n");
+        for(int k=0;k<5;k++) {
+            message = BigInteger.valueOf(Math.abs(random.nextInt()));
+            message2 = BigInteger.valueOf(Math.abs(random.nextInt()));
+            keys = keyGen(p, g, random);
 
-        System.out.println("Test de la propriété homomorphe : \n");
+            encrypt = encrypt(p, g, keys[1], message, random);
+            encrypt2 = encrypt(p, g, keys[1], message2, random);
+
+            decryptTotal = decrypt(encrypt[0].multiply(encrypt2[0]).mod(p), encrypt[1].multiply(encrypt2[1]).mod(p), keys[0], p);
+            productm1m2 = message.multiply(message2).mod(p);
+
+            assert (productm1m2.equals(decryptTotal)) : "homomorphic property not checked";
+
+            sb1.append("m1 = ").append(message).append("\tm2 = ").append(message2).append("\n");
+            sb1.append("C and B decrypting gives : ").append(decryptTotal).append("\n");
+            sb1.append("(m1 * m2).mod(p) = ").append(productm1m2).append("\n");
+            sb1.append("Homomorphic property is checked : ").append(productm1m2.equals(decryptTotal)).append("\n\n");
+        }
         try {
-            bufferedWriter.write("Test de la propriété homomorphe : \n");
-            int k=0;
-            while(k<5) {
-                message = BigInteger.valueOf(Math.abs(random.nextInt()));
-                message2 = BigInteger.valueOf(Math.abs(random.nextInt()));
-                keys = keyGen(p, g);
-
-                encrypt = encrypt(p, g, keys[1], message);
-                encrypt2 = encrypt(p, g, keys[1], message2);
-
-                decryptTotal = decrypt(encrypt[0].multiply(encrypt2[0]).mod(p), encrypt[1].multiply(encrypt2[1]).mod(p), keys[0], p);
-                productm1m2 = message.multiply(message2).mod(p);
-
-                assert (productm1m2.equals(decryptTotal)) : "homomorphic property not checked";
-
-                System.out.println("m1 = " + message + ", \tm2 = " + message2);
-                System.out.println("C and B decrypting gives : " + decryptTotal);
-                System.out.println("(m1 * m2).mod(p) = " + productm1m2);
-                System.out.println("Homomorphic property is checked : " + productm1m2.equals(decryptTotal) + "\n");
-                System.out.flush();
-                bufferedWriter.write("m1 = " + message + "\tm2 = " + message2 + "\n");
-                bufferedWriter.write("C and B decrypting gives : " + decryptTotal + "\n");
-                bufferedWriter.write("(m1 * m2).mod(p) = " + productm1m2 + "\n");
-                bufferedWriter.write("Homomorphic property is checked : " + productm1m2.equals(decryptTotal) + "\n\n");
-                k++;
-            }
-
-
-            System.out.println("L'ensemble des tests se trouvent dans le fichier test.txt \n");
-        } catch (IOException | EuclideException e) {
+            bufferedWriter.write(sb1.toString());
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
+        System.out.println(sb1);
+        System.out.println("L'ensemble des tests se trouvent dans le fichier test.txt \n");
+        System.out.flush();
     }
 }

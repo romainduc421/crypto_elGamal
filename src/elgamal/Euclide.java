@@ -5,7 +5,6 @@ import elgamal.exceptions.EuclideException;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 
@@ -95,52 +94,45 @@ public class Euclide {
      * Réalise les 10 000 tests de la fonction euclide() avec le nombre p
      * et 10 000 valeurs différentes de a (générées aléatoirement avec SecureRandom).
      * @param p value of prime BigInteger p
-     * @throws NoSuchAlgorithmException
+     * @throws EuclideException
      */
-    public void test10000Times(BigInteger p) throws NoSuchAlgorithmException, EuclideException {
+    public void test10000Times(BigInteger p, SecureRandom random) throws EuclideException {
         BigInteger a, gcd_ap, bezout;
         BigInteger[] results;
+        StringBuilder result = new StringBuilder();
 
-        SecureRandom random = SecureRandom.getInstanceStrong();
+        result.append("Test de la fonction Euclide()  : \n");
+        for(int k=0; k < 10000; k++) {
+            a = new BigInteger(1024, random);
+            results = euclideCompute(a, p);
+            gcd_ap = a.gcd(p).abs();
+            bezout = a.multiply(results[1]).add(p.multiply(results[2]));
+            assert(results[0].equals(gcd_ap)):"le premier element du tableau ne contient pas le gcd(a,p)";
+            assert(gcd_ap.equals(bezout)):"gcd(a,p) != au + pv";
+            assert(BigInteger.valueOf(1).equals(bezout)):"equation de bezout ne donne pas 1";
 
-        System.out.println("Test de la fonction Euclide() : ");
-        try {
-            bufferedWriter.write("Test de la fonction Euclide()  : \n");
-            int k=0;
-            while(k < 10000) {
-                a = new BigInteger(1024, random);
-                results = euclideCompute(a, p);
-                gcd_ap = a.gcd(p).abs();
-                bezout = a.multiply(results[1]).add(p.multiply(results[2]));
-                assert(results[0].equals(gcd_ap)):"le premier element du tableau ne contient pas le gcd(a,p)";
-                assert(gcd_ap.equals(bezout)):"gcd(a,p) != au + pv";
-                assert(BigInteger.valueOf(1).equals(bezout)):"equation de bezout ne donne pas 1";
+            //sortie que pour les 5 premieres occurrences
+            if(k < 5){
 
-                //sortie que pour les 5 premieres occurrences
-                if(k < 5){
+                result.append("a = ").append(a).append("\t et \n");
+                result.append("a.u + p.v = ").append(bezout).append("\n");
+                //verifie que pgcd(a,p) == results[0]
+                result.append("results[0] == pgcd(a,p) = ").append(results[0].equals(gcd_ap)).append("\n");
+                // Vérifie que a * u + b * v = GCD(a, p)
+                result.append("au + pv == pgcd(a,p) = ").append(gcd_ap.equals(bezout)).append("\n");
+                result.append("gcd == 1 = ").append(BigInteger.valueOf(1).equals(bezout)).append("\n\n");
 
-                    bufferedWriter.write("a = "+ a + "\t et \n");
-                    bufferedWriter.write("a.u + p.v = " + bezout + "\n");
-                    //verifie que pgcd(a,p) == results[0]
-                    bufferedWriter.write("results[0] == pgcd(a,p) = "+results[0].equals(gcd_ap)+"\n");
-                    // Vérifie que a * u + b * v = GCD(a, p)
-                    bufferedWriter.write("au + pv == pgcd(a,p) = "+gcd_ap.equals(bezout)+"\n");
-                    bufferedWriter.write("gcd == 1 = "+BigInteger.valueOf(1).equals(bezout)+"\n\n");
-                    System.out.println("a = "+ a);
-                    System.out.println("a.u + p.v = " + bezout );
-                    //verifie que pgcd(a,p) == results[0]
-                    System.out.println("results[0] == pgcd(a,p) = "+results[0].equals(gcd_ap));
-                    // Vérifie que a * u + b * v = GCD(a, p)
-                    System.out.println("au + pv == pgcd(a,p) = "+gcd_ap.equals(bezout));
-                    System.out.println("gcd == 1 = "+BigInteger.valueOf(1).equals(bezout)+"\n");
-                }
-                k++;
             }
-            System.out.println("Les tests se trouvent dans le fichier test.txt \n");
+        }
+
+        try {
+            bufferedWriter.write(result.toString());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println(result);
+        System.out.flush();
     }
 
 }

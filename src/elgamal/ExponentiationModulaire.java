@@ -3,7 +3,6 @@ package elgamal;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class ExponentiationModulaire {
@@ -36,36 +35,32 @@ public class ExponentiationModulaire {
         return x;
     }
 
-    public void test10000Times(BigInteger p, BigInteger g) throws NoSuchAlgorithmException {
+    public void test10000Times(BigInteger p, BigInteger g, SecureRandom sr) {
         BigInteger a, ourExpMod, modPowofBigint;
-        SecureRandom sr = SecureRandom.getInstanceStrong();
-        System.out.println("Test de la fonction expMod() : ");
+        StringBuilder sb = new StringBuilder();
 
-        try{
-            bufferedWriter.write("Test de la fonction expMod() : \n");
-            int k = 0;
-            while(k<10000){
-                a = new BigInteger(500,sr);
-                ourExpMod = expMod(p,g,a);
-                modPowofBigint = g.modPow(a,p) ;
-                assert(ourExpMod.equals(modPowofBigint)):"((a^g) mod p != expMod(p,g,a))";
+        sb.append("Test de la fonction expMod() : \n");
+        for(int k=0; k<10000; k++){
+            a = new BigInteger(500,sr);
+            ourExpMod = expMod(p,g,a);
+            modPowofBigint = g.modPow(a,p) ;
+            assert(ourExpMod.equals(modPowofBigint)):"((a^g) mod p != expMod(p,g,a))";
 
-                //5 premieres occurrences
-                if(k<5){
-                    bufferedWriter.write("a = "+a+"\t et \n");
-                    bufferedWriter.write("expMod(p,g,a) = "+ourExpMod+"\n");
-                    bufferedWriter.write("((a^g) mod p == expMod(p,g,a)) = "+ourExpMod.equals(modPowofBigint)+"\n\n");
-                    System.out.println("a = "+a+"\t et ");
-                    System.out.println("expMod(p,g,a) = "+ourExpMod);
-                    System.out.println("((a^g) mod p == expMod(p,g,a)) = "+ourExpMod.equals(modPowofBigint)+"\n");
-                }
-
-                k++;
+            //5 premieres occurrences
+            if(k<5){
+                sb.append("a = ").append(a).append("\t et \n");
+                sb.append("expMod(p,g,a) = ").append(ourExpMod).append("\n");
+                sb.append("((a^g) mod p == expMod(p,g,a)) = ").append(ourExpMod.equals(modPowofBigint)).append("\n\n");
             }
-            System.out.println("Les tests se trouvent dans le fichier test.txt \n");
+
+        }
+        try{
+            bufferedWriter.write(sb.toString());
         }catch(IOException e){
             e.printStackTrace();
         }
+        System.out.println(sb);
+        System.out.flush();
 
     }
 }

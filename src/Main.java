@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,6 +19,13 @@ public class Main {
 
         //convert an hexadecimal string into a BigInteger
         BigInteger p = new BigInteger(primeMod, 16), g = BigInteger.TWO;
+        SecureRandom sr;
+        //returns an instance of the strongest SecureRandom implementation available on each platform
+        try {
+            sr = SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
         final long startTime = System.nanoTime();
         try{
             File file = new File("test.txt");
@@ -27,15 +35,15 @@ public class Main {
             Euclide euclide = new Euclide(bufferedWriter);
             ExponentiationModulaire exponentiationModulaire = new ExponentiationModulaire(bufferedWriter);
             ElGamal elGamal = new ElGamal(bufferedWriter);
-            euclide.test10000Times(p);
-            exponentiationModulaire.test10000Times(p,g);
-            elGamal.test100Times(p,g);
-            elGamal.homomorphic_property(p,g);
+            euclide.test10000Times(p, sr);
+            exponentiationModulaire.test10000Times(p,g,sr);
+            elGamal.test100Times(p,g,sr);
+            elGamal.homomorphic_property(p,g,sr);
             bufferedWriter.close();
             long elapsedTime = System.nanoTime() - startTime;
             System.out.println("Total execution time (s): "
                     + elapsedTime/1000000000);
-        }catch(IOException | NoSuchAlgorithmException | EuclideException e){
+        }catch(IOException | EuclideException e){
             e.printStackTrace();
         }
     }
