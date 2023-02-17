@@ -6,8 +6,11 @@
 ~~~
 git clone https://github.com/romainduc421/crypto_elGamal
 cd crypto_elGamal/src/
-javac Main.java; java -ea Main
+javac Main.java; java -ea Main [-all]
 ~~~
+* ```-all``` permet de tester les assertions de toutes les itérations suivantes (exécution plus lente : une trentaine de secondes)
+* Ce paramètre est optionnel et par défaut seules les 5 premières itérations seront testées
+* ```-ea``` permet d'activer les assertions
 * Le fichier de sortie ```test.txt``` se trouvera sous le répertoire src
 
 ### Objectifs

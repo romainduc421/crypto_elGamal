@@ -64,23 +64,39 @@ public class ElGamal {
      * @param random
      * @throws EuclideException
      */
-    public void test100Times(BigInteger p, BigInteger g, SecureRandom random) throws EuclideException {
+    public void test100Times(BigInteger p, BigInteger g, SecureRandom random, boolean all) throws EuclideException {
         BigInteger message, message2;
         BigInteger[] keys, encrypt;
         StringBuilder sb1 = new StringBuilder();
 
         sb1.append("Test du chiffrement ElGamal  : \n\n");
 
-        for(int k=0; k<100; k++){
-            message = BigInteger.valueOf(Math.abs(random.nextInt()));
-            keys = keyGen(p,g, random);
+        if(all) {
+            for (int k = 0; k < 100; k++) {
+                message = BigInteger.valueOf(Math.abs(random.nextInt()));
+                keys = keyGen(p, g, random);
 
-            encrypt = encrypt(p,g, keys[1], message, random);
-            message2 = decrypt(encrypt[0],encrypt[1], keys[0], p);
-            assert(message.intValue() == message2.intValue()):"message déchiffré différent";
+                encrypt = encrypt(p, g, keys[1], message, random);
+                message2 = decrypt(encrypt[0], encrypt[1], keys[0], p);
+                assert (message.intValue() == message2.intValue()) : "message déchiffré différent";
 
-            //5 premieres occurrences
-            if(k < 5){
+                //5 premieres occurrences
+                if (k < 5) {
+                    sb1.append("Le message est : ").append(message.intValue()).append("\n");
+                    sb1.append("Le message chiffré est : C  : ").append(encrypt[0].intValue()).append("   -   et B  : ").append(encrypt[1].intValue()).append("\n");
+
+                    sb1.append("Le message déchiffré est : ").append(message2.intValue()).append("\n");
+                    sb1.append("Message correctement déchiffré ?  ").append(message.intValue() == message2.intValue()).append("\n\n");
+                }
+            }
+        }else{
+            for (int k = 0; k < 5; k++) {
+                message = BigInteger.valueOf(Math.abs(random.nextInt()));
+                keys = keyGen(p, g, random);
+                encrypt = encrypt(p, g, keys[1], message, random);
+                message2 = decrypt(encrypt[0], encrypt[1], keys[0], p);
+                assert (message.intValue() == message2.intValue()) : "message déchiffré différent";
+
                 sb1.append("Le message est : ").append(message.intValue()).append("\n");
                 sb1.append("Le message chiffré est : C  : ").append(encrypt[0].intValue()).append("   -   et B  : ").append(encrypt[1].intValue()).append("\n");
 

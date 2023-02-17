@@ -35,24 +35,37 @@ public class ExponentiationModulaire {
         return x;
     }
 
-    public void test10000Times(BigInteger p, BigInteger g, SecureRandom sr) {
+    public void test10000Times(BigInteger p, BigInteger g, SecureRandom sr, boolean all) {
         BigInteger a, ourExpMod, modPowofBigint;
         StringBuilder sb = new StringBuilder();
 
         sb.append("Test de la fonction expMod() : \n");
-        for(int k=0; k<10000; k++){
-            a = new BigInteger(500,sr);
-            ourExpMod = expMod(p,g,a);
-            modPowofBigint = g.modPow(a,p) ;
-            assert(ourExpMod.equals(modPowofBigint)):"((a^g) mod p != expMod(p,g,a))";
+        if(all) {
+            for (int k = 0; k < 10000; k++) {
+                a = new BigInteger(500, sr);
+                ourExpMod = expMod(p, g, a);
+                modPowofBigint = g.modPow(a, p);
+                assert (ourExpMod.equals(modPowofBigint)) : "((a^g) mod p != expMod(p,g,a))";
 
-            //5 premieres occurrences
-            if(k<5){
+                //5 premieres occurrences
+                if (k < 5) {
+                    sb.append("a = ").append(a).append("\t et \n");
+                    sb.append("expMod(p,g,a) = ").append(ourExpMod).append("\n");
+                    sb.append("((a^g) mod p == expMod(p,g,a)) = ").append(ourExpMod.equals(modPowofBigint)).append("\n\n");
+                }
+
+            }
+        }
+        else{
+            for(int k=0; k<5; k++){
+                a = new BigInteger(500, sr);
+                ourExpMod = expMod(p, g, a);
+                modPowofBigint = g.modPow(a, p);
+                assert (ourExpMod.equals(modPowofBigint)) : "((a^g) mod p != expMod(p,g,a))";
                 sb.append("a = ").append(a).append("\t et \n");
                 sb.append("expMod(p,g,a) = ").append(ourExpMod).append("\n");
                 sb.append("((a^g) mod p == expMod(p,g,a)) = ").append(ourExpMod.equals(modPowofBigint)).append("\n\n");
             }
-
         }
         try{
             bufferedWriter.write(sb.toString());

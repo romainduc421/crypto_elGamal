@@ -96,24 +96,44 @@ public class Euclide {
      * @param p value of prime BigInteger p
      * @throws EuclideException
      */
-    public void test10000Times(BigInteger p, SecureRandom random) throws EuclideException {
+    public void test10000Times(BigInteger p, SecureRandom random, boolean all) throws EuclideException {
         BigInteger a, gcd_ap, bezout;
         BigInteger[] results;
         StringBuilder result = new StringBuilder();
 
         result.append("Test de la fonction Euclide()  : \n");
-        for(int k=0; k < 10000; k++) {
-            a = new BigInteger(1024, random);
-            results = euclideCompute(a, p);
-            gcd_ap = a.gcd(p).abs();
-            bezout = a.multiply(results[1]).add(p.multiply(results[2]));
-            assert(results[0].equals(gcd_ap)):"le premier element du tableau ne contient pas le gcd(a,p)";
-            assert(gcd_ap.equals(bezout)):"gcd(a,p) != au + pv";
-            assert(BigInteger.valueOf(1).equals(bezout)):"equation de bezout ne donne pas 1";
+        if(all) {
+            for (int k = 0; k < 10000; k++) {
+                a = new BigInteger(1024, random);
+                results = euclideCompute(a, p);
+                gcd_ap = a.gcd(p).abs();
+                bezout = a.multiply(results[1]).add(p.multiply(results[2]));
+                assert (results[0].equals(gcd_ap)) : "le premier element du tableau ne contient pas le gcd(a,p)";
+                assert (gcd_ap.equals(bezout)) : "gcd(a,p) != au + pv";
+                assert (BigInteger.valueOf(1).equals(bezout)) : "equation de bezout ne donne pas 1";
 
-            //sortie que pour les 5 premieres occurrences
-            if(k < 5){
+                //sortie que pour les 5 premieres occurrences
+                if (k < 5) {
 
+                    result.append("a = ").append(a).append("\t et \n");
+                    result.append("a.u + p.v = ").append(bezout).append("\n");
+                    //verifie que pgcd(a,p) == results[0]
+                    result.append("results[0] == pgcd(a,p) = ").append(results[0].equals(gcd_ap)).append("\n");
+                    // Vérifie que a * u + b * v = GCD(a, p)
+                    result.append("au + pv == pgcd(a,p) = ").append(gcd_ap.equals(bezout)).append("\n");
+                    result.append("gcd == 1 = ").append(BigInteger.valueOf(1).equals(bezout)).append("\n\n");
+
+                }
+            }
+        }else{
+            for(int k = 0; k < 5; k++){
+                a = new BigInteger(1024, random);
+                results = euclideCompute(a, p);
+                gcd_ap = a.gcd(p).abs();
+                bezout = a.multiply(results[1]).add(p.multiply(results[2]));
+                assert (results[0].equals(gcd_ap)) : "le premier element du tableau ne contient pas le gcd(a,p)";
+                assert (gcd_ap.equals(bezout)) : "gcd(a,p) != au + pv";
+                assert (BigInteger.valueOf(1).equals(bezout)) : "equation de bezout ne donne pas 1";
                 result.append("a = ").append(a).append("\t et \n");
                 result.append("a.u + p.v = ").append(bezout).append("\n");
                 //verifie que pgcd(a,p) == results[0]
@@ -121,7 +141,6 @@ public class Euclide {
                 // Vérifie que a * u + b * v = GCD(a, p)
                 result.append("au + pv == pgcd(a,p) = ").append(gcd_ap.equals(bezout)).append("\n");
                 result.append("gcd == 1 = ").append(BigInteger.valueOf(1).equals(bezout)).append("\n\n");
-
             }
         }
 
@@ -134,5 +153,4 @@ public class Euclide {
         System.out.println(result);
         System.out.flush();
     }
-
 }
