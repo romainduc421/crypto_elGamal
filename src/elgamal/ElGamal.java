@@ -13,8 +13,8 @@ public class ElGamal {
     private final BufferedWriter bufferedWriter;
     public ElGamal(BufferedWriter bufferedWriter){
         this.bufferedWriter = bufferedWriter;
-        this.euclide = new Euclide(bufferedWriter);
-        this.exponentiationModulaire = new ExponentiationModulaire(bufferedWriter);
+        this.euclide = new Euclide(null);
+        this.exponentiationModulaire = new ExponentiationModulaire(null);
     }
 
     /**
