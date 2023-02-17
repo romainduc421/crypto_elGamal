@@ -44,7 +44,35 @@
         breakautoindent=true, %
         captionpos=b,
         backgroundcolor=\color{lightgray!5},
-        captionpos = b
+        literate=%
+        {é}{{\'{e}}}1
+        {è}{{\`{e}}}1
+        {ê}{{\^{e}}}1
+        {ë}{{\¨{e}}}1
+        {É}{{\'{E}}}1
+        {Ê}{{\^{E}}}1
+        {û}{{\^{u}}}1
+        {ù}{{\`{u}}}1
+        {ú}{{\'{u}}}1
+        {â}{{\^{a}}}1
+        {à}{{\`{a}}}1
+        {á}{{\'{a}}}1
+        {ã}{{\~{a}}}1
+        {Á}{{\'{A}}}1
+        {Â}{{\^{A}}}1
+        {Ã}{{\~{A}}}1
+        {ç}{{\c{c}}}1
+        {Ç}{{\c{C}}}1
+        {õ}{{\~{o}}}1
+        {ó}{{\'{o}}}1
+        {ô}{{\^{o}}}1
+        {Õ}{{\~{O}}}1
+        {Ó}{{\'{O}}}1
+        {Ô}{{\^{O}}}1
+        {î}{{\^{i}}}1
+        {Î}{{\^{I}}}1
+        {í}{{\'{i}}}1
+        {Í}{{\~{Í}}}1
 }
 
 % Document
@@ -55,8 +83,8 @@
         \textbf{Question 1 : \\}Quel langage de programmation avez-vous choisi ? Quelle bibliothèque permettant de gérer des nombres entiers de grande taille allez-vous utiliser ? Quelles sont les opérations implémentées dans cette bibliothèque (multiplication, addition,...) ?\\ \textit{\\Réponse :} \\Nous avons choisi d'utiliser le langage Java. Java nous a paru l'option la plus adaptée, car il dispose de bibliothèques mathématiques intégrées permettant d'effectuer des opérations complexes, e.g. l'exponentiation modulaire.\\La classe\textit{ java.math.BigInteger } permet de représenter et de manipuler des nombres entiers de grande taille sans être contraint par les limitations de taille des types primitifs ou leurs enveloppes. Il est possible d'utiliser cette classe pour effectuer des soustractions, des modulos, des multiplications. En plus des opérations habituelles sur les entiers, elle offre des opérations de calcul en arithmétique modulaire, calcul du pgcd, génération de nombre premier, test pour savoir si un entier est premier, etc...  \\\\
 
         \label{subsec:Q2}
-        \textbf{Question 2 : \\}De plus, pour générer les valeurs (très grandes elles aussi), $x$ et $r$, il faut être capable de générer des nombres aléatoires de très bonne qualité et dits cryptographiquement sûrs.\\En vous aidant d’internet, donnez la définition d’un nombre aléatoire cryptographiquement sûr. Selon le langage de programmation choisi, donnez le nom de la bibliothèque qui va vous permettre de générer ces nombres aléatoires.\\ \textit{\\Réponse :}\\\\Un nombre aléatoire cryptographiquement sûr est un nombre:\\ - Généré aléatoirement qui est difficile à prédire ou à reproduire, même en utilisant les informations sur la façon dont il a été généré\\ - Aléatoire indépendant des autres nombres aléatoires générés précédemment.\\ - Très difficile, étant donné les $k$ premiers bits d'une séquence, de trouver le $(k+1)$-ème bit à l'aide d'un algorithme polynomial avec un taux de succès de plus de 50\%.\\ Ces nombres sont souvent utilisés pour sécuriser les communications cryptographiques en générant des clés de chiffrement ou en ajoutant du bruit à des communications pour empêcher qu'elles ne soient déchiffrées.\\
-        Nous utiliserons la bibliothèque "SecureRandom" de Java pour générer des nombres aléatoires cryptographiquement sûrs. Voici une exemple d'utilisation de cette bibliothèque:\\\\ \begin{lstlisting}
+        \textbf{Question 2 : \\}De plus, pour générer les valeurs (très grandes elles aussi), $x$ et $r$, il faut être capable de générer des nombres aléatoires de très bonne qualité et dits cryptographiquement sûrs.\\En vous aidant d’internet, donnez la définition d’un nombre aléatoire cryptographiquement sûr. Selon le langage de programmation choisi, donnez le nom de la bibliothèque qui va vous permettre de générer ces nombres aléatoires.\\ \textit{\\Réponse :}\\Un nombre aléatoire cryptographiquement sûr est un nombre:\\ - Généré aléatoirement qui est difficile à prédire ou à reproduire, même en utilisant les informations sur la façon dont il a été généré\\ - Aléatoire indépendant des autres nombres aléatoires générés précédemment.\\ - Très difficile, étant donné les $k$ premiers bits d'une séquence, de trouver le $(k+1)$-ème bit à l'aide d'un algorithme polynomial avec un taux de succès de plus de 50\%.\\ Ces nombres sont souvent utilisés pour sécuriser les communications cryptographiques en générant des clés de chiffrement ou en ajoutant du bruit à des communications pour empêcher qu'elles ne soient déchiffrées.\\
+        Nous utiliserons la bibliothèque "SecureRandom" de Java pour générer des nombres aléatoires cryptographiquement sûrs. Voici une exemple d'utilisation de cette bibliothèque: \begin{lstlisting}
 import java.security.SecureRandom;
 
 SecureRandom random = new SecureRandom().getInstanceStrong();
@@ -69,23 +97,231 @@ int randomInt = random.nextInt();
         \end{itemize}
 
         \textbf{\\Question 3 : \\}Implémentez la fonction Euclide(). Testez là en vérifiant sur 10000 valeurs différentes de a que a · u + p · v = 1. Vous pouvez également vérifier que si une fonction existe déjà dans votre librairie, vous retournez bien les mêmes valeurs.
-        \textit{\\Réponse :} \\\\Nous avons implémenté la fonction Euclide() en utilisant l'algorithme d'Euclide étendu (solution itérative). Cette fonction prends donc en paramètre 2 \textit{BigInteger} puis retourne un tableau de \textit{BigInteger} contenant PGCD(a,b) ainsi que les coefficient u et v aux indices respectifs [0], [1] et [2].\\\includegraphics[scale=0.4]{assets/euclide.png}\\Nous avons testé cette implémentation à l'aide de la fonction \textit{ void test10000Times(BigInteger p, SecureRandom random) } (Voir ci-après).\\Pour le même entier \textit{p} nous générons 10000 valeurs de \textit{a} à l'aide de SecureRandom et nous appellons la fonction Euclide() définie précédement. Puis nous vérifions à l'aide de 3 assert que:\\ - le tableau retourné contient bien le gcd(a,p) (A l'aide de la fonction \textit{gcd(p)} de la classe \textit{BigInteger})\\ - le gcd(a,p) est bien égale à au + pv\\ - l'équation de bezout donne bien 1\\\\ Nous affichons les 5 derniers résultat dans le fichier "test.txt". \\\\\includegraphics[scale=0.3]{assets/testEucl.png}
+        \textit{\\Réponse :} \\Nous avons implémenté la fonction Euclide() en utilisant l'algorithme d'Euclide étendu (solution itérative). Cette fonction prends donc en paramètre 2 \textit{BigInteger} puis retourne un tableau de \textit{BigInteger} contenant PGCD(a,b) ainsi que les coefficient u et v aux indices respectifs [0], [1] et [2].\\\begin{lstlisting}[caption ={Euclide étendu itératif}, captionpos=b,breaklines = true]
+public BigInteger[] euclideEtendu2(BigInteger a, BigInteger b)
+{
+    final BigInteger UN = BigInteger.ONE, ZERO = BigInteger.ZERO;
+    BigInteger u = UN,
+            v = ZERO,
+            u1 = ZERO,
+            v1 = UN,
+            t;
 
+    // tant que BigInteger.valueOf(b) > 0
+    while(b.compareTo(ZERO) > 0){
+        //q = a / b;
+        BigInteger q = a.divide(b);
+        t = u;
+        u = u1;
+        //u = u0 - q * u1
+        u1 = t.subtract(q.multiply(u1));
+        t = v;
+        v = v1;
+        //v = v0 - q * v1
+        v1 = t.subtract(q.multiply(v1));
+        t = b;
+        b = a.subtract(q.multiply(b));
+        a = t;
+    }
+    return (a.intValue()>0)? new BigInteger[]{a,u,v} : new BigInteger[]{a.negate(),u.negate(),v.negate()};
+}\end{lstlisting}Nous avons testé cette implémentation à l'aide de la fonction \textit{ void test10000Times(BigInteger p, SecureRandom random) } (Voir ci-après).\\Pour le même entier \textit{p} nous générons 10000 valeurs de \textit{a} à l'aide de SecureRandom et nous appellons la fonction Euclide() définie précédement. Puis nous vérifions à l'aide de 3 assert que:\\ - le tableau retourné contient bien le gcd(a,p) (A l'aide de la fonction \textit{gcd(p)} de la classe \textit{BigInteger})\\ - le gcd(a,p) est bien égale à au + pv\\ - l'équation de bezout donne bien 1\\\\ Nous affichons les 5 derniers résultat dans le fichier "test.txt". \\\\\begin{lstlisting}[caption ={testEuclide}, captionpos=b,breaklines = true]
+public void test10000Times(BigInteger p, SecureRandom random) throws EuclideException {
+    BigInteger a, gcd_ap, bezout;
+    BigInteger[] results;
+    StringBuilder result = new StringBuilder();
 
-        \textbf{\\Question 4 : \\}Implémentez la fonction ExpMod(). Testez-la sur 10000 valeurs différentes.
-        \textit{\\Réponse :} \\\\Nous avons implémenté cette fonction en utilisant l'algorithme de l'exponentiation rapide avec \textit{ BigInteger expMod(BigInteger p, BigInteger g, BigInteger a) } qui se situe dans la classe \textit{ExponentiationModulaire.java}. Cette fonction prends donc en paramètre 3 \textit{BigInteger} puis retourne un  \textit{ BigInteger A = $(g^a \equiv p)$} . \\\includegraphics[scale=0.4]{assets/ExpMod.png}\\Nous avons testé cette implémentation à l'aide de la fonction \textit{ void test10000Times(BigInteger p, BigInteger g, SecureRandom sr) (Voir ci-après}.\\Pour le même entier \textit{p} nous générons 10000 valeurs de \textit{a} à l'aide de SecureRandom et nous appellons la fonction Euclide() définie précédement. Puis nous vérifions à l'aide de 3 assert que:\\ - le tableau retourné contient bien le gcd(a,p) (A l'aide de la fonction \textit{gcd(p)} de la classe \textit{BigInteger})\\ - le gcd(a,p) est bien égale à au + pv\\ - l'équation de bezout donne bien 1\\ Nous affichons les 5 derniers résultat dans le fichier "test.txt". \\\\\includegraphics[scale=0.3]{assets/testExpMod.png}
+    result.append("Test de la fonction Euclide()  : \n");
+    for(int k=0; k < 10000; k++) {
+        a = new BigInteger(1024, random);
+        results = euclideCompute(a, p);
+        gcd_ap = a.gcd(p).abs();
+        bezout = a.multiply(results[1]).add(p.multiply(results[2]));
+        assert(results[0].equals(gcd_ap)):"le premier element du tableau ne contient pas le gcd(a,p)";
+        assert(gcd_ap.equals(bezout)):"gcd(a,p) != au + pv";
+        assert(BigInteger.valueOf(1).equals(bezout)):"equation de bezout ne donne pas 1";
 
+        //sortie que pour les 5 premieres occurrences
+        if(k < 5){
+
+            result.append("a = ").append(a).append("\t et \n");
+            result.append("a.u + p.v = ").append(bezout).append("\n");
+            //verifie que pgcd(a,p) == results[0]
+            result.append("results[0] == pgcd(a,p) = ").append(results[0].equals(gcd_ap)).append("\n");
+            // Verifie que a * u + b * v = GCD(a, p)
+            result.append("au + pv == pgcd(a,p) = ").append(gcd_ap.equals(bezout)).append("\n");
+            result.append("gcd == 1 = ").append(BigInteger.valueOf(1).equals(bezout)).append("\n\n");
+
+        }
+    }
+
+}\end{lstlisting}
+
+        \textbf{Question 4 : \\}Implémentez la fonction ExpMod(). Testez-la sur 10000 valeurs différentes.
+        \textit{\\Réponse :} \\Nous avons implémenté cette fonction en utilisant l'algorithme de l'exponentiation rapide avec \textit{ BigInteger expMod(BigInteger p, BigInteger g, BigInteger a) } qui se situe dans la classe \textit{ExponentiationModulaire.java}. Cette fonction prends donc en paramètre 3 \textit{BigInteger} puis retourne un  \textit{ BigInteger A = $(g^a \equiv p)$} . \\\begin{lstlisting}[caption={Exponentiation rapide}, captionpos=b,breaklines = true]
+public BigInteger expMod(BigInteger p, BigInteger g, BigInteger a){
+    BigInteger x = BigInteger.ONE;
+
+    while(a.compareTo(BigInteger.ZERO) > 0) {   //tant que a>0
+        if(a.testBit(0)) {  //a pair
+            x = (x.multiply(g)).mod(p);
+        }
+
+        g = (g.multiply(g)).mod(p); //g = g**2 mod p
+        a = a.shiftRight(1);    //a/=2
+    }
+    return x;
+}\end{lstlisting}Nous avons testé cette implémentation à l'aide de la fonction \textit{ void test10000Times(BigInteger p, BigInteger g, SecureRandom sr) (Voir ci-après}.\\Pour le même entier \textit{p} nous générons 10000 valeurs de \textit{a} à l'aide de SecureRandom et nous appellons la fonction Euclide() définie précédement. Puis nous vérifions à l'aide de 3 assert que:\\ - le tableau retourné contient bien le gcd(a,p) (A l'aide de la fonction \textit{gcd(p)} de la classe \textit{BigInteger})\\ - le gcd(a,p) est bien égale à au + pv\\ - l'équation de bezout donne bien 1\\ Nous affichons les 5 derniers résultat dans le fichier "test.txt". \\\\\begin{lstlisting}[caption={testExpMod}, captionpos=b,breaklines = true]
+public void test10000Times(BigInteger p, BigInteger g, SecureRandom sr) {
+    BigInteger a, ourExpMod, modPowofBigint;
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("Test de la fonction expMod() : \n");
+    for(int k=0; k<10000; k++){
+        a = new BigInteger(500,sr);
+        ourExpMod = expMod(p,g,a);
+        modPowofBigint = g.modPow(a,p) ;
+        assert(ourExpMod.equals(modPowofBigint)):"((a^g) mod p != expMod(p,g,a))";
+
+        //5 premieres occurrences
+        if(k<5){
+            sb.append("a = ").append(a).append("\t et \n");
+            sb.append("expMod(p,g,a) = ").append(ourExpMod).append("\n");
+            sb.append("((a^g) mod p == expMod(p,g,a)) = ").append(ourExpMod.equals(modPowofBigint)).append("\n\n");
+        }
+
+    }
+    try{
+        bufferedWriter.write(sb.toString());
+    }catch(IOException e){
+        e.printStackTrace();
+    }
+    System.out.println(sb);
+    System.out.flush();
+
+}\end{lstlisting}
 
         \textbf{\\Question 5 : \\}Implémentez ces trois fonctions. Testez-la en vérifiant que 100 valeurs différentes de m donne bien les déchiffrés attendus (c’est-à-dire de nouveau les m!). Vérifiez également que les 100 r tirés au hasard sont bien différents.
-        \textit{\\Réponse :} \\\\Nous avons implémenté les fonctions Encrypt(), Decrypt().\\\includegraphics[scale=0.45]{assets/keygenEG.png}\\\includegraphics[scale=0.42]{assets/encryptEG.png}\\\includegraphics[scale=0.4]{assets/decryptEG.png} \\\\Voir la fonction de test ci-dessous : \\\includegraphics[scale=0.3]{assets/testElgamal.png}
-        \\\\Nous avons également implanté une fonction permettant de calculer l'inverse modulaire d'un nombre. (utilisée dans la fonction Decrypt()) \\\includegraphics[scale=0.45]{assets/invMod.png}\\
+        \textit{\\Réponse :} \\\\Nous avons implémenté les fonctions keyGen(), Encrypt(), Decrypt().\\\\\begin{lstlisting}[caption=keyGen, captionpos=b,breaklines = true]
+/**
+* Generation des cles
+* @param p valeur du grand nombre premier
+* @param g valeur du grand nombre premier
+* @return BigInteger[2] contenant k_p et k_s
+*/
+public BigInteger[] keyGen(BigInteger p, BigInteger g, SecureRandom rand) {
+    BigInteger x = new BigInteger(1024, rand); // tire x au hasard (private-key)
+    BigInteger X = exponentiationModulaire.expMod(p,g,x); // calcule X = g^x mod p (public-key)
+    return new BigInteger[] {x, X};
+}  
+\end{lstlisting}\begin{lstlisting}[caption=encrypt, captionpos=b,breaklines = true]
+/**
+* Fonction de chiffrement : prend en entree
+* la cle publique de Bob K_p = (p,g,X) et un message m
+* @param p
+* @param g
+* @param publicKey
+* @param m
+* @return couple chiffre {C,B} avec C = m.y mod p et B = g^r mod p
+*/
+public BigInteger[] encrypt(BigInteger p, BigInteger g, BigInteger publicKey, BigInteger m, SecureRandom rand){
+    BigInteger r = new BigInteger(1024, rand);
+    BigInteger B = exponentiationModulaire.expMod(p, g, r); // calcule B = g^r mod p
+    BigInteger C = m.multiply(exponentiationModulaire.expMod(p, publicKey, r)).mod(p); // calcule C = m * X^r mod p
+    return new BigInteger[]{ C, B };
+}
+\end{lstlisting}\begin{lstlisting}[caption=decrypt, captionpos=b,breaklines = true]
+/**
+* Fonction de dechiffrement
+* @param C 1e partie du chiffre
+* @param B 2e partie du chiffre
+* @param x cle secrete de Bob
+* @param p grand entier : modulo
+* @return
+*/
+public BigInteger decrypt(BigInteger C, BigInteger B, BigInteger x, BigInteger p) throws EuclideException {
+    return (euclide.modInv(exponentiationModulaire.expMod(p,B,x),p)).multiply(C).mod(p);
+}
+\end{lstlisting}Voir la fonction de test ci-dessous : \\\begin{lstlisting}[caption=Test chiffrement El-Gamal, captionpos=b,breaklines = true]
+public void test100Times(BigInteger p, BigInteger g, SecureRandom random) throws EuclideException {
+    BigInteger message, message2;
+    BigInteger[] keys, encrypt;
+    StringBuilder sb1 = new StringBuilder();
 
+    sb1.append("Test du chiffrement ElGamal  : \n\n");
 
-        \textbf{\\Question 6 : \\}Vérifiez cette propriété en chiffrant deux messages différents m1 et m2 avec la fonction Encrypt(), puis en calculant C = C1 . C2 mod p et B = B1 . B2 mod p et enfin en déchiffrant via la fonction Decrypt() le couple (C, B) pour récupérer m. Vérifier ensuite que m = m1.m2 mod p.
-        \textit{\\Réponse :} \\\\Nous avons implémenté la fonction de test ci-dessous qui test 5 fois la propriété : \\\\\includegraphics[scale=0.3]{assets/homo_prop.png}\\\\\\\
+    for(int k=0; k<100; k++){
+        message = BigInteger.valueOf(Math.abs(random.nextInt()));
+        keys = keyGen(p,g, random);
 
+        encrypt = encrypt(p,g, keys[1], message, random);
+        message2 = decrypt(encrypt[0],encrypt[1], keys[0], p);
+        assert(message.intValue() == message2.intValue()):"message déchiffré différent";
 
-        \textbf{\\Fichier test.txt : }
+        //5 premieres occurrences
+        if(k < 5){
+            sb1.append("Le message est : ").append(message.intValue()).append("\n");
+            sb1.append("Le message chiffré est : C  : ").append(encrypt[0].intValue()).append("   -   et B  : ").append(encrypt[1].intValue()).append("\n");
+
+            sb1.append("Le message déchiffré est : ").append(message2.intValue()).append("\n");
+            sb1.append("Message correctement déchiffré ?  ").append(message.intValue() == message2.intValue()).append("\n\n");
+        }
+    }
+    try {
+        bufferedWriter.write(sb1.toString());
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    System.out.print(sb1);
+    System.out.flush();
+}
+\end{lstlisting}Nous avons également implanté une fonction permettant de calculer l'inverse modulaire d'un nombre. (utilisée dans la fonction Decrypt()) \\\begin{lstlisting}[caption=Inverse modulaire, captionpos=b,breaklines = true]
+public BigInteger modInv(BigInteger a, BigInteger b) throws EuclideException {
+    BigInteger[] resEuclide = euclideEtendu2(a,b);
+    if(!resEuclide[0].equals(BigInteger.ONE)){
+        throw new EuclideException("No modular inverse possible");
+    }else{
+        return resEuclide[1].mod(b);
+    }
+}     
+\end{lstlisting}
+        \textbf{Question 6 : \\}Vérifiez cette propriété en chiffrant deux messages différents m1 et m2 avec la fonction Encrypt(), puis en calculant C = C1 . C2 mod p et B = B1 . B2 mod p et enfin en déchiffrant via la fonction Decrypt() le couple (C, B) pour récupérer m. Vérifier ensuite que m = m1.m2 mod p.
+        \textit{\\Réponse :} \\\\Nous avons implémenté la fonction de test ci-dessous qui test 5 fois la propriété : \\\\\begin{lstlisting}
+public void homomorphic_property(BigInteger p, BigInteger g, SecureRandom random) throws EuclideException{
+    BigInteger message, message2;
+    BigInteger[] keys, encrypt, encrypt2;
+    BigInteger decryptTotal, productm1m2;
+    StringBuilder sb1 = new StringBuilder();
+
+    sb1.append("Test de la propriété homomorphe : \n\n");
+    for(int k=0;k<5;k++) {
+        message = BigInteger.valueOf(Math.abs(random.nextInt()));
+        message2 = BigInteger.valueOf(Math.abs(random.nextInt()));
+        keys = keyGen(p, g, random);
+
+        encrypt = encrypt(p, g, keys[1], message, random);
+        encrypt2 = encrypt(p, g, keys[1], message2, random);
+
+        decryptTotal = decrypt(encrypt[0].multiply(encrypt2[0]).mod(p), encrypt[1].multiply(encrypt2[1]).mod(p), keys[0], p);
+        productm1m2 = message.multiply(message2).mod(p);
+
+        assert (productm1m2.equals(decryptTotal)) : "homomorphic property not checked";
+
+        sb1.append("m1 = ").append(message).append("\tm2 = ").append(message2).append("\n");
+        sb1.append("C and B decrypting gives : ").append(decryptTotal).append("\n");
+        sb1.append("(m1 * m2).mod(p) = ").append(productm1m2).append("\n");
+        sb1.append("Homomorphic property is checked : ").append(productm1m2.equals(decryptTotal)).append("\n\n");
+    }
+    try {
+        bufferedWriter.write(sb1.toString());
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    System.out.println(sb1);
+    System.out.println("L'ensemble des tests se trouvent dans le fichier test.txt \n");
+    System.out.flush();
+}
+\end{lstlisting}
+        \textbf{Fichier test.txt : }
 
         \begin{lstlisting}[caption ={le fichier test.txt}, captionpos=b,breaklines = true]
 Test de la fonction Euclide()  : 
